@@ -85,7 +85,7 @@ verify() {
     /usr/bin/pmset -g batt 2>/dev/null || true
     echo
     echo "Display-related processes:"
-    ps -Ao pid,user,etime,comm,args | grep -Ei 'WindowServer|displaypolicyd|corebrightnessd|SystemUIServer|Dock|usbd' | grep -v grep || true
+    ps -Ao pid,user,etime,comm,args | awk 'NR == 1 || /WindowServer|displaypolicyd|corebrightnessd|SystemUIServer|Dock|usbd/' || true
   } > "$VERIFY" 2>&1
 }
 backup_layout_preferences() {
