@@ -31,7 +31,7 @@ done
 DISPLAY_COUNT=$(awk 'END{print NR-1}' "$CSV")
 WINDOWSERVER_RUNNING=false; pgrep -x WindowServer >/dev/null 2>&1 && WINDOWSERVER_RUNNING=true
 THUNDERBOLT_PRESENT=false; system_profiler SPThunderboltDataType 2>/dev/null | grep -q 'Thunderbolt Bus' && THUNDERBOLT_PRESENT=true
-POWER_SOURCE=$(pmset -g batt 2>/dev/null | head -n1 | sed 's/.*Now drawing from //; s/["'"']//g')
+POWER_SOURCE=$(pmset -g batt 2>/dev/null | head -n1 | sed 's/.*Now drawing from //' | tr -d "\"'")
 OVERALL="Healthy"; { ! $WINDOWSERVER_RUNNING || [ "$DISPLAY_COUNT" -eq 0 ]; } && OVERALL="Attention required"
 cat > "$JSON" <<EOF
 {"collected_at":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","hostname":"$(hostname)","display_count":$DISPLAY_COUNT,"windowserver_running":$WINDOWSERVER_RUNNING,"thunderbolt_bus_present":$THUNDERBOLT_PRESENT,"power_source":"$POWER_SOURCE","overall_status":"$OVERALL"}
